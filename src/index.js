@@ -53,7 +53,9 @@ function Square(props) {
           }
         ],
         stepNumber: 0,
-        xIsNext: true
+        xIsNext: true,
+        preGame: true,
+        showLoader:false,
       };
     }
   
@@ -82,6 +84,11 @@ function Square(props) {
         xIsNext: (step % 2) === 0
       });
     }
+
+    preGame(){
+      this.setState({ preGame:false});  
+    }
+
   
     render() {
       const history = this.state.history;
@@ -105,10 +112,28 @@ function Square(props) {
       } else {
         status = "Next player: " + (this.state.xIsNext ? "X" : "O");
       }
-  
-      return (
-        <div className="game">
+      let page;
+      let pageText;
+      if(this.state.preGame){
+        pageText="Hi AnJali, Get Ready for the Magic"
+
+        page = <React.Fragment><div className='stupidFont'>{pageText}
+        </div>
+        <div className="lds-roller">
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        </div>  
+        <div>&nbsp;</div>
+        <button className='buttonSt' onClick={()=>this.preGame()}> click Me</button>
+        </React.Fragment>
+        
+      }else{
+        pageText="The magic is here.. Enjoy the stupid game"
+        page=<React.Fragment>
+          <div className='stupidFont'>{pageText}
+        </div>
+          <div className="game">
           <div className="game-board">
+          
             <Board
               squares={current.squares}
               onClick={i => this.handleClick(i)}
@@ -119,6 +144,30 @@ function Square(props) {
             <ol>{moves}</ol>
           </div>
         </div>
+        </React.Fragment>
+      }
+      
+     
+      return (
+        <React.Fragment>
+        {page}
+        </React.Fragment>
+        /*<div className="game">
+        <div className="lds-roller">
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        </div>
+          <div className="game-board">
+          
+            <Board
+              squares={current.squares}
+              onClick={i => this.handleClick(i)}
+            />
+          </div>
+          <div className="game-info">
+            <div>{status}</div>
+            <ol>{moves}</ol>
+          </div>
+        </div>*/
       );
     }
   }
